@@ -1,0 +1,3 @@
+Hi, [NAME]
+This is a template.
+Regards.

@@ -24,38 +24,7 @@ import google.auth
 
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ["https://mail.google.com/"]
-
-def build_file_part(file):
-  """Creates a MIME part for a file.
-
-  Args:
-    file: The path to the file to be attached.
-
-  Returns:
-    A MIME part that can be attached to a message.
-  """
-  content_type, encoding = mimetypes.guess_type(file)
-
-  if content_type is None or encoding is not None:
-    content_type = "application/octet-stream"
-  main_type, sub_type = content_type.split("/", 1)
-  if main_type == "text":
-    with open(file, "rb"):
-      msg = MIMEText("r", _subtype=sub_type)
-  elif main_type == "image":
-    with open(file, "rb"):
-      msg = MIMEImage("r", _subtype=sub_type)
-  elif main_type == "audio":
-    with open(file, "rb"):
-      msg = MIMEAudio("r", _subtype=sub_type)
-  else:
-    with open(file, "rb"):
-      msg = MIMEBase(main_type, sub_type)
-      msg.set_payload(file.read())
-  filename = os.path.basename(file)
-  msg.add_header("Content-Disposition", "attachment", filename=filename)
-  return msg
+SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -114,15 +83,21 @@ def connect():
     print(f"An error occurred: {error}")
     return None
 
-def create_message(mailaddr, fullpath, filename,id="NONE"):
+
+def create_message(sender_mailaddr, mailaddr, fullpath, filename,id="NONE"):
+  """
+  IN:
+    sender_mailaddr: sender email address
+    mailaddr: receiver fmail address
+    fullpath: full path of the attachment
+    filename: name of the attachment
+  """
   attachment_filename = fullpath
   message = EmailMessage()
 
-  message.set_content("This is automated draft mail")
-
   message["To"] = mailaddr
-  message["From"] = "test@gmail.com"
-  message["Subject"] = "Automated draft"
+  message["From"] = "株式会社ピコ・エイダ <"+sender_mailaddr+">"
+  message["Subject"] = "Title"
   
   with open('template.txt','r') as f:
     content = f.read()
@@ -158,16 +133,54 @@ if __name__ == "__main__":
   mypath = str(cwd) + '/pdf'
   onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-  myfiles = []
+  # get the customer info 
+  customer_info = open('customers.csv', 'r')
+  file_maps = open('log.csv', 'r')
 
-  for f in onlyfiles[:3:1]:
-    myfiles.append((join(mypath,f),f))
+  customer_info_dict = {}
+  for l in customer_info.readlines():
+    if len(l) <= 1:
+      break
+    l = l.strip().split(',')
+    customer_info_dict[l[0]] = {"name": l[1], "email": l[2]}
+
+  # create a mapping between ID and filename
+  file_maps_dict = {}
+  for l in file_maps.readlines():
+    if len(l) <= 1:
+      break
+    l = l.strip().split(',')
+    file_maps_dict[l[0]] = l[2].replace(".xlsx", "")
+
+  myfiles = {}
+  # myfiles maps file name to the file full path
+  for f in onlyfiles:
+    myfiles[f.replace(".pdf", "")] = join(mypath,f)
 
 
-  for fullpath, filename in myfiles:
+  for customer_id in customer_info_dict.keys():
+    c = customer_info_dict[customer_id]
+
+    # get the customer mapping (id, name, email)
+    if (customer_id not in file_maps_dict):
+      print('did not find',customer_id,'for ID->filename mapping')
+      continue
+    filename: str = file_maps_dict[customer_id]
+
+    print(myfiles)
+    # get full file path using the filename
+    if (filename not in myfiles):
+      print("could not find pdf for", customer_id, filename)
+      continue
+
+    fullpath = myfiles[filename]
+    
     message = None
     try:
-      message = create_message('rennyhong.picoada@gmail.com', fullpath, filename)
+      print(service.users())
+      message = create_message('rennyhong2010@gmail.com',  # sender address
+                               c["email"],  # receiver address
+                               fullpath, filename+".pdf")
     except Exception as e:
       print('failed to create message,', e)
       continue

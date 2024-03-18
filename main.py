@@ -97,14 +97,14 @@ def create_message(sender_mailaddr, mailaddr, fullpath, filename,id="NONE"):
 
   message["To"] = mailaddr
   message["From"] = "株式会社ピコ・エイダ <"+sender_mailaddr+">"
-  message["Subject"] = "Title"
+  message["Subject"] = "TEST"
   
-  with open('template.txt','r') as f:
+  with open('template2.html','r') as f:
     content = f.read()
     content = content.replace('[NAME]',filename)
-    message.set_content(content)
+    message.add_alternative(content,subtype='html')
 
-   # attachment
+  # attachment
   # guessing the MIME type
   type_subtype, _ = mimetypes.guess_type(attachment_filename)
   maintype, subtype = type_subtype.split("/")
@@ -112,7 +112,7 @@ def create_message(sender_mailaddr, mailaddr, fullpath, filename,id="NONE"):
   attachment_data = None
   with open(attachment_filename, "rb") as fp:
     attachment_data = fp.read()
-  message.add_attachment(attachment_data, maintype, subtype, filename=filename)
+    message.add_attachment(attachment_data, maintype, subtype, filename=filename)
   if (attachment_data == None):
     return None
 
@@ -134,12 +134,18 @@ if __name__ == "__main__":
   onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
   # get the customer info 
+  # contains CustomerID, CustomerName, CustomerEmail
   customer_info = open('customers.csv', 'r')
+
+  # contains CustomerID, FileName
   file_maps = open('log.csv', 'r')
 
-  curtomer_info_cache = customer_info.readlines()
+  # contains contents from the customer_info file
+  customer_info_cache = customer_info.readlines()
+    
+  # contains CustomerID -> (CustomerName, CustomerEmail)
   customer_info_dict = {}
-  for l in curtomer_info_cache:
+  for l in customer_info_cache:
     if len(l) <= 1:
       break
     l = l.strip().split(',')
@@ -163,7 +169,7 @@ if __name__ == "__main__":
 
   outputlog = open('output.log', 'w')
   # read the lines from the cache
-  for l in curtomer_info_cache:
+  for l in customer_info_cache:
     if (len(l) <= 1):
       break
     l = l.strip()
@@ -179,7 +185,7 @@ if __name__ == "__main__":
       continue
     filename: str = file_maps_dict[customer_id]
 
-    print(myfiles)
+    # print(myfiles)
     # get full file path using the filename
     if (filename not in myfiles):
       errormsg = 'could not find pdf for id={}, filename={}'.format(customer_id, filename)
@@ -191,7 +197,6 @@ if __name__ == "__main__":
     
     message = None
     try:
-      print(service.users())
       message = create_message('rennyhong2010@gmail.com',  # sender address
                                c["email"],  # receiver address
                                fullpath, filename+".pdf")

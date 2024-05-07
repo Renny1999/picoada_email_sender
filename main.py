@@ -21,7 +21,7 @@ from email.mime.text import MIMEText
 
 
 import google.auth
-
+import csv
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
@@ -84,7 +84,14 @@ def connect():
     return None
 
 
-def create_message(sender_mailaddr, mailaddr, fullpath, filename,id="NONE"):
+def create_message(sender_mailaddr, \
+                   mailaddr:list[str], \
+                   fullpath:str, \
+                   filename:str, \
+                   facility='', \
+                   name='', \
+                   cc:list[str] = [], \
+                   id="NONE"):
   """
   IN:
     sender_mailaddr: sender email address
@@ -97,12 +104,16 @@ def create_message(sender_mailaddr, mailaddr, fullpath, filename,id="NONE"):
 
   message["To"] = mailaddr
   message["From"] = "株式会社ピコ・エイダ <"+sender_mailaddr+">"
+  message["CC"] = cc
   message["Subject"] = "TEST"
   
-  with open('template2.html','r') as f:
+  with open('template.txt','r') as f:
     content = f.read()
-    content = content.replace('[NAME]',filename)
-    message.add_alternative(content,subtype='html')
+    content = content.replace('[FACILITY]',facility)
+    content = content.replace('[NAME]',name)
+    # message.add_alternative(content,subtype='html')
+    # message.add_alternative(content,subtype='raw')
+    message.add_alternative(content)
 
   # attachment
   # guessing the MIME type
@@ -168,6 +179,24 @@ if __name__ == "__main__":
     myfiles[f.replace(".pdf", "")] = join(mypath,f)
 
   outputlog = open('output.log', 'w')
+
+  csvfile = open('emails.csv','r')
+  reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
+  email_data = {}
+  for r in reader:
+    customer_id_email = r[0]
+    customer_facility1_email = r[1]
+    customer_facility2_email = r[2]
+    customer_name_email = r[3]
+    customer_address_email = r[4].split('\n')
+    customer_cc_email = r[5].split('\n')
+    email_data[customer_id_email] = {'facility':customer_facility2_email,
+                                     'name': customer_name_email,
+                                     'address': customer_address_email,
+                                     'cc': customer_cc_email}
+
+  cus = email_data['ASAK0001']
+  print(cus)
   # read the lines from the cache
   for l in customer_info_cache:
     if (len(l) <= 1):
@@ -185,7 +214,6 @@ if __name__ == "__main__":
       continue
     filename: str = file_maps_dict[customer_id]
 
-    # print(myfiles)
     # get full file path using the filename
     if (filename not in myfiles):
       errormsg = 'could not find pdf for id={}, filename={}'.format(customer_id, filename)
@@ -198,8 +226,12 @@ if __name__ == "__main__":
     message = None
     try:
       message = create_message('rennyhong2010@gmail.com',  # sender address
-                               c["email"],  # receiver address
-                               fullpath, filename+".pdf")
+                               cus['address'],  # receiver address
+                               fullpath, 
+                               facility=cus['facility'],
+                               name=cus['name'],
+                               cc=cus['cc'],
+                               filename=filename+".pdf")
     except Exception as e:
       print('failed to create message,', e)
       outputlog.write(',0,failed to create message\n')

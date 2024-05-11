@@ -25,6 +25,8 @@ import csv
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+year = 2024
+month = 4
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -45,8 +47,8 @@ def gmail_send_message(service, message):
     )
 
   except HttpError as error:
-    print(f"An error occurred: {error}")
     send_message = None
+    raise error
 
   return send_message
 
@@ -84,7 +86,8 @@ def connect():
     return None
 
 
-def create_message(sender_mailaddr, \
+def create_message(subject:str, \
+                   sender_mailaddr, \
                    mailaddr:list[str], \
                    fullpath:str, \
                    filename:str, \
@@ -105,7 +108,7 @@ def create_message(sender_mailaddr, \
   message["To"] = mailaddr
   message["From"] = "株式会社ピコ・エイダ <"+sender_mailaddr+">"
   message["CC"] = cc
-  message["Subject"] = "TEST"
+  message["Subject"] = subject
   
   with open('template.txt','r') as f:
     content = f.read()
@@ -150,20 +153,7 @@ if __name__ == "__main__":
 
   # contains CustomerID, FileName
   file_maps = open('log.csv', 'r')
-
-  # contains contents from the customer_info file
-  customer_info_cache = customer_info.readlines()
     
-  # contains CustomerID -> (CustomerName, CustomerEmail)
-  customer_info_dict = {}
-  for l in customer_info_cache:
-    if len(l) <= 1:
-      break
-    l = l.strip().split(',')
-    customer_info_dict[l[0]] = {"name": l[1], "email": l[2]}
-
-  customer_info.close()
-
   # create a mapping between ID and filename
   file_maps_dict = {}
   for l in file_maps.readlines():
@@ -195,37 +185,39 @@ if __name__ == "__main__":
                                      'address': customer_address_email,
                                      'cc': customer_cc_email}
 
-  cus = email_data['ASAK0001']
-  print(cus)
   # read the lines from the cache
-  for l in customer_info_cache:
-    if (len(l) <= 1):
-      break
-    l = l.strip()
-    outputlog.write(l)
-    customer_id = l.split(',')[0]
-    c = customer_info_dict[customer_id]
+  for cid in email_data.keys():
+    cus = email_data[cid] # customer info
+    print(cus)
+    logmsg = "{},{},".format(cid,cus["facility"])
+    outputlog.write(logmsg)
+    print(len(cus["address"]))
+    if (len(cus["address"]) == 0):
+      print("NO ADDRESS")
 
     # get the customer mapping (id, name, email)
-    if (customer_id not in file_maps_dict):
-      errormsg = 'did not find {} for ID->filename mapping'.format(customer_id)
+    if (cid not in file_maps_dict):
+      errormsg = 'did not find {} for ID->filename mapping'.format(cid)
       print(errormsg)
       outputlog.write(',0,'+errormsg+'\n')
       continue
-    filename: str = file_maps_dict[customer_id]
+    filename: str = file_maps_dict[cid]
 
     # get full file path using the filename
     if (filename not in myfiles):
-      errormsg = 'could not find pdf for id={}, filename={}'.format(customer_id, filename)
+      errormsg = 'could not find pdf for id={}, filename={}'.format(cid, filename)
       print(errormsg)
       outputlog.write(',0,'+errormsg+'\n')
       continue
 
     fullpath = myfiles[filename]
+    print("file full path: ", fullpath)
     
     message = None
     try:
-      message = create_message('rennyhong2010@gmail.com',  # sender address
+      subject = "{}様{}年{}月月報のご送付".format(cus["facility"],year,month)
+      message = create_message(subject,
+                              'ren@picoada.co.jp',  # sender address
                                cus['address'],  # receiver address
                                fullpath, 
                                facility=cus['facility'],
@@ -239,10 +231,11 @@ if __name__ == "__main__":
 
     try:
       gmail_send_message(service, message)
-      outputlog.write(',1,\n')
+      outputlog.write(',message successfully sent\n')
     except Exception as e:
       print('failed to send message,', e)
-      outputlog.write(',0,failed to send message\n')
+      errormsg = ',0,failed to send message, reason: {}\n'.format(e)
+      outputlog.write(errormsg)
       continue
   outputlog.close()
 

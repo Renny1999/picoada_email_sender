@@ -180,6 +180,13 @@ if __name__ == "__main__":
     customer_name_email = r[3]
     customer_address_email = r[4].split('\n')
     customer_cc_email = r[5].split('\n')
+
+    # if (customer_facility2_email == ''):
+    #   continue
+    #
+    # if (customer_name_email == ''):
+    #   continue
+
     email_data[customer_id_email] = {'facility':customer_facility2_email,
                                      'name': customer_name_email,
                                      'address': customer_address_email,
@@ -217,13 +224,14 @@ if __name__ == "__main__":
     try:
       subject = "{}様{}年{}月月報のご送付".format(cus["facility"],year,month)
       message = create_message(subject,
-                              'ren@picoada.co.jp',  # sender address
+                              'rennyhong1103@gmail.com',  # sender address
                                cus['address'],  # receiver address
                                fullpath, 
                                facility=cus['facility'],
                                name=cus['name'],
                                cc=cus['cc'],
                                filename=filename+".pdf")
+
     except Exception as e:
       print('failed to create message,', e)
       outputlog.write(',0,failed to create message\n')
@@ -231,10 +239,10 @@ if __name__ == "__main__":
 
     try:
       gmail_send_message(service, message)
-      outputlog.write(',message successfully sent\n')
+      outputlog.write('1,message successfully sent\n')
     except Exception as e:
       print('failed to send message,', e)
-      errormsg = ',0,failed to send message, reason: {}\n'.format(e)
+      errormsg = '0,failed to send message, reason: \"{}\"\n'.format(e)
       outputlog.write(errormsg)
       continue
   outputlog.close()

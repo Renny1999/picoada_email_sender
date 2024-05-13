@@ -152,7 +152,7 @@ if __name__ == "__main__":
   customer_info = open('customers.csv', 'r')
 
   # contains CustomerID, FileName
-  file_maps = open('log.csv', 'r')
+  file_maps = open('log2.csv', 'r')
     
   # create a mapping between ID and filename
   file_maps_dict = {}
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 
   outputlog = open('output.log', 'w')
 
-  csvfile = open('emails.csv','r')
+  csvfile = open('emails_real.csv','r')
   reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
   email_data = {}
   for r in reader:
@@ -224,7 +224,7 @@ if __name__ == "__main__":
     try:
       subject = "{}様{}年{}月月報のご送付".format(cus["facility"],year,month)
       message = create_message(subject,
-                              'rennyhong1103@gmail.com',  # sender address
+                              'ren@picoada.co.jp',  # sender address
                                cus['address'],  # receiver address
                                fullpath, 
                                facility=cus['facility'],
@@ -239,6 +239,9 @@ if __name__ == "__main__":
 
     try:
       gmail_send_message(service, message)
+      fname = os.path.basename(fullpath)
+      print(fullpath)
+      os.replace(fullpath, "sent/"+fname)
       outputlog.write('1,message successfully sent\n')
     except Exception as e:
       print('failed to send message,', e)

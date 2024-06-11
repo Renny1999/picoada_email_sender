@@ -40,12 +40,12 @@ SNKC0001,,,0,did not find SNKC0001 for ID->filename mapping
 SNKC0002,,,0,did not find SNKC0002 for ID->filename mapping
 ASAK0001,公益財団法人　浅香山病院,,0,did not find ASAK0001 for ID->filename mapping
 ARIM0001,,,0,did not find ARIM0001 for ID->filename mapping
-KMRK0002,,0,failed to send message, reason: "<HttpError 400 when requesting https://gmail.googleapis.com/gmail/v1/users/me/messages/send?alt=json returned "Recipient address required". Details: "[{'message': 'Recipient address required', 'domain': 'global', 'reason': 'invalidArgument'}]">"
-ASPM0001,淀川キリスト教病院,1,message successfully sent
+KMRK0002,,,0,did not find KMRK0002 for ID->filename mapping
+ASPM0001,淀川キリスト教病院,,0,did not find ASPM0001 for ID->filename mapping
 HCNR0001,株式会社聘珍樓,,0,did not find HCNR0001 for ID->filename mapping
 KBKS0001,神戸海星病院,,0,did not find KBKS0001 for ID->filename mapping
 KBKS0002,,,0,did not find KBKS0002 for ID->filename mapping
-SERE0001,特別養護老人ホーム 淡路栄光園,1,message successfully sent
+SERE0001,特別養護老人ホーム 淡路栄光園,,0,did not find SERE0001 for ID->filename mapping
 HCOM0001,学校法人 兵庫医科大学,,0,did not find HCOM0001 for ID->filename mapping
 KSRN0001,株式会社関電エネルギーソリューション,,0,did not find KSRN0001 for ID->filename mapping
 SAIS0007,福井県済生会病院,,0,did not find SAIS0007 for ID->filename mapping
@@ -57,9 +57,9 @@ KHNA0003,甲南介護老人保健施設,,0,did not find KHNA0003 for ID->filenam
 HCOM0002,学校法人 兵庫医科大学,,0,did not find HCOM0002 for ID->filename mapping
 SHSH0001,晋真会 ベリタス病院,,0,did not find SHSH0001 for ID->filename mapping
 KMUH0001,関西医科大学香里病院,,0,did not find KMUH0001 for ID->filename mapping
-PANA0001,パナソニック株式会社 くらしアプライアンス社,1,message successfully sent
+PANA0001,パナソニック株式会社 くらしアプライアンス社,,0,did not find PANA0001 for ID->filename mapping
 SERE0003,,,0,did not find SERE0003 for ID->filename mapping
-KYOW0001,協和会病院,1,message successfully sent
+KYOW0001,協和会病院,,0,did not find KYOW0001 for ID->filename mapping
 KOYU0001,介護老人保健施設 すばる魚崎の郷,,0,did not find KOYU0001 for ID->filename mapping
 SERE0002,特別養護老人ホーム  森町愛光園,,0,did not find SERE0002 for ID->filename mapping
 WRKE0001,社会福祉法人 奈良市和楽園,,0,did not find WRKE0001 for ID->filename mapping
@@ -80,7 +80,7 @@ BPTS0002,バプテスト老人保健施設,,0,did not find BPTS0002 for ID->file
 YMKI0002,介護老人保健施設 やまき・あべの苑,,0,did not find YMKI0002 for ID->filename mapping
 PBHS0001,公立八鹿病院,,0,did not find PBHS0001 for ID->filename mapping
 KNSN0002,医療法人社団 健心会
-シルバーステイあじさい,,0,did not find KNSN0002 for ID->filename mapping
+シルバーステイあじさい,,0,failed to create message
 YMKI0003,医療法人  山紀会,,0,did not find YMKI0003 for ID->filename mapping
 YHHK0001,西横浜国際総合病院,,0,did not find YHHK0001 for ID->filename mapping
 ISEI0001,学研都市病院,,0,did not find ISEI0001 for ID->filename mapping
@@ -92,7 +92,7 @@ SEKE0002,千葉メディカルセンター,,0,did not find SEKE0002 for ID->file
 SEKE0003,介護老人保健施設 秀眉園,,0,did not find SEKE0003 for ID->filename mapping
 KOWA0001,久我山病院,,0,did not find KOWA0001 for ID->filename mapping
 SNKI0001,横浜新緑総合病院,,0,did not find SNKI0001 for ID->filename mapping
-KOWA0002,特別養護老人ホーム 久我山園,,0,did not find KOWA0002 for ID->filename mapping
+KOWA0002,特別養護老人ホーム 久我山園,1,message successfully sent
 SEKE0004,セコメディック病院,,0,did not find SEKE0004 for ID->filename mapping
 SNKI0002,医療法人社団 三喜会,1,message successfully sent
 KGAR0001,花吉野カンツリー倶楽部　,,0,did not find KGAR0001 for ID->filename mapping
@@ -104,11 +104,11 @@ ISHN0001,社会医療法人 岡村一心堂病院,1,message successfully sent
 AZNK0010,介護老人保健施設　ひまわり,1,message successfully sent
 NHOH0008,国立病院機構 熊本医療センター,,0,did not find NHOH0008 for ID->filename mapping
 JCHO0002,りつりん病院,,0,did not find JCHO0002 for ID->filename mapping
-NHOH0009,国立病院機構  長崎病院,1,message successfully sent
+NHOH0009,国立病院機構  長崎病院,,0,did not find NHOH0009 for ID->filename mapping
 TTJN0001,特別養護老人ホーム まつかぜの郷,,0,did not find TTJN0001 for ID->filename mapping
 KNSY0001,東新潟病院,1,message successfully sent
 CTHS0005,南魚沼市民病院,,0,did not find CTHS0005 for ID->filename mapping
-KSMC0002,医療法人 清水会,1,message successfully sent
+KSMC0002,医療法人 清水会,,0,did not find KSMC0002 for ID->filename mapping
 KSMC0001,医療法人 清水会,,0,did not find KSMC0001 for ID->filename mapping
 TRTR0005,堅田漁業協同組合,,0,did not find TRTR0005 for ID->filename mapping
 TRTR0006,堅田漁業協同組合,,0,did not find TRTR0006 for ID->filename mapping

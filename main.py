@@ -26,7 +26,7 @@ import csv
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 year = 2024
-month = 5
+month = 6
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -120,6 +120,7 @@ def create_message(subject:str, \
 
   # attachment
   # guessing the MIME type
+  print(subject)
   type_subtype, _ = mimetypes.guess_type(attachment_filename)
   maintype, subtype = type_subtype.split("/")
 
@@ -166,7 +167,7 @@ if __name__ == "__main__":
 
   outputlog = open('output.log', 'w')
 
-  csvfile = open('emails_real.csv','r')
+  csvfile = open('email_real.csv','r')
   reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
   email_data = {}
   for r in reader:
@@ -183,16 +184,18 @@ if __name__ == "__main__":
     # if (customer_name_email == ''):
     #   continue
 
-    email_data[customer_id_email] = {'facility':customer_facility2_email,
-                                     'name': customer_name_email,
-                                     'address': customer_address_email,
-                                     'cc': customer_cc_email}
+    email_data[customer_id_email] = {
+        'facility_subject':customer_facility1_email,
+        'facility':customer_facility2_email,
+        'name': customer_name_email,
+        'address': customer_address_email,
+        'cc': customer_cc_email}
 
   # read the lines from the cache
   for cid in email_data.keys():
     cus = email_data[cid] # customer info
     print(cus)
-    logmsg = "{},{},".format(cid,cus["facility"])
+    logmsg = "{},{},".format(cid,cus["facility_subject"])
     outputlog.write(logmsg)
     print(len(cus["address"]))
     if (len(cus["address"]) == 0):
@@ -205,6 +208,7 @@ if __name__ == "__main__":
       outputlog.write(',0,'+errormsg+'\n')
       continue
     filename: str = file_maps_dict[cid]
+    print(filename)
 
     # get full file path using the filename
     if (filename not in myfiles):
@@ -218,7 +222,7 @@ if __name__ == "__main__":
     
     message = None
     try:
-      subject = "{}様{}年{}月月報のご送付".format(cus["facility"],year,month)
+      subject = "{}様{}年{}月月報のご送付".format(cus["facility_subject"],year,month)
       message = create_message(subject,
                               'ren@picoada.co.jp',  # sender address
                                cus['address'],  # receiver address

@@ -26,7 +26,7 @@ import csv
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 year = 2024
-month = 7
+month = 8
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -149,7 +149,7 @@ if __name__ == "__main__":
   onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
   # contains CustomerID, FileName
-  file_maps = open('log.csv', 'r')
+  file_maps = open('res/log.csv', 'r')
     
   # create a mapping between ID and filename
   file_maps_dict = {}
@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
   outputlog = open('output.log', 'w')
 
-  csvfile = open('email_real.csv','r')
+  csvfile = open('res/email_real.csv','r')
   reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
   email_data = {}
   for r in reader:

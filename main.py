@@ -26,7 +26,7 @@ import csv
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 year = 2024
-month = 8
+month = 9
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.

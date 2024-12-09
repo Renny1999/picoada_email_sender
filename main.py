@@ -26,7 +26,7 @@ import csv
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 year = 2024
-month = 10
+month = 11
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -191,6 +191,7 @@ if __name__ == "__main__":
         'address': customer_address_email,
         'cc': customer_cc_email}
 
+  check = True
   # read the lines from the cache
   for cid in email_data.keys():
     cus = email_data[cid] # customer info
@@ -238,6 +239,12 @@ if __name__ == "__main__":
       continue
 
     try:
+      if check:
+        # print("sending email: {}".format(message))
+        # confirm = input("Press enter to continue")
+        check = False
+
+
       gmail_send_message(service, message)
       fname = os.path.basename(fullpath)
       print(fullpath)

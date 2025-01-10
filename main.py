@@ -26,7 +26,7 @@ import csv
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 year = 2024
-month = 11
+month = 12
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -149,7 +149,7 @@ if __name__ == "__main__":
   onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
   # contains CustomerID, FileName
-  file_maps = open('res/log.csv', 'r')
+  file_maps = open('res/namelist.csv', 'r')
     
   # create a mapping between ID and filename
   file_maps_dict = {}
@@ -173,10 +173,11 @@ if __name__ == "__main__":
   for r in reader:
     customer_id_email = r[0]
     customer_facility1_email = r[1]
-    customer_facility2_email = r[2]
-    customer_name_email = r[3]
-    customer_address_email = r[4].split('\n')
-    customer_cc_email = r[5].split('\n')
+    customer_addon_email = r[2]
+    customer_facility2_email = r[3]
+    customer_name_email = r[4]
+    customer_address_email = r[5].split('\n')
+    customer_cc_email = r[6].split('\n')
 
     # if (customer_facility2_email == ''):
     #   continue
@@ -186,6 +187,7 @@ if __name__ == "__main__":
 
     email_data[customer_id_email] = {
         'facility_subject':customer_facility1_email,
+        'facility_addon' : customer_addon_email,
         'facility':customer_facility2_email,
         'name': customer_name_email,
         'address': customer_address_email,
@@ -223,7 +225,7 @@ if __name__ == "__main__":
     
     message = None
     try:
-      subject = "{}様{}年{}月月報のご送付".format(cus["facility_subject"],year,month)
+      subject = "{}様{}年{}月月報のご送付{}".format(cus["facility_subject"],year,month,cus["facility_addon"])
       message = create_message(subject,
                               'ren@picoada.co.jp',  # sender address
                                cus['address'],  # receiver address

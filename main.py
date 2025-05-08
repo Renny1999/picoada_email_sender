@@ -3,8 +3,6 @@ import base64
 import mimetypes
 from os.path import isfile, join
 from os import listdir
-from os.path import splitext
-
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -14,11 +12,6 @@ from googleapiclient.errors import HttpError
 
 from email.message import EmailMessage
 import base64
-from email.mime.audio import MIMEAudio
-from email.mime.base import MIMEBase
-from email.mime.image import MIMEImage
-from email.mime.text import MIMEText
-
 
 import google.auth
 import csv
@@ -26,7 +19,7 @@ import csv
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 year = 2025
-month = 2
+month = 4
 
 def gmail_send_message(service, message):
   """Create and insert a draft email.
@@ -110,6 +103,7 @@ def create_message(subject:str, \
   message["CC"] = cc
   message["Subject"] = subject
   
+  # with open('template_fix.txt','r') as f:
   with open('template.txt','r') as f:
     content = f.read()
     content = content.replace('[FACILITY]',facility)
@@ -225,6 +219,7 @@ if __name__ == "__main__":
     
     message = None
     try:
+      # subject = "[再送付] お詫び & {}様{}年{}月月報の再送付{}".format(cus["facility_subject"],year,month,cus["facility_addon"])
       subject = "{}様{}年{}月月報のご送付{}".format(cus["facility_subject"],year,month,cus["facility_addon"])
       message = create_message(subject,
                               'ren@picoada.co.jp',  # sender address
@@ -234,6 +229,8 @@ if __name__ == "__main__":
                                name=cus['name'],
                                cc=cus['cc'],
                                filename=filename+".pdf")
+      print("receiver {}, address {}".format(cus['facility'], cus['address']))
+
 
     except Exception as e:
       print('failed to create message,', e)
